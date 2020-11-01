@@ -1,6 +1,7 @@
 /**
  * 
  * Manipulating the DOM exercise.
+ *===================================
  * Exercise programmatically builds navigation,
  * scrolls to anchors from navigation,
  * and highlights section in viewport upon scrolling.
@@ -9,71 +10,104 @@
  * 
  * JS Version: ES2015/ES6
  * 
- * JS Standard: ESlint
- * 
-*/
+ * JS Standard: ESlint*/
 
-/**
- * Define Global Variables
- * 
-*/
+ /*to measure performance*/
+ //const startingTime = performance.now();
+ /*eslint-env es6*/
 
+ //*************1.build the navbarMenu******************//
 
-/**
- * End Global Variables
- * Start Helper Functions
- * 
-*/
+ const sections = document.querySelectorAll('section');
+ //console.log(sections );
+ const navbarMenu = document.getElementById('navbar__list');
+ //console.log(navbarMenu);
+ const newFragment = document.createDocumentFragment();
 
+ //iterate  (i.e., loop)  through sections 
 
+ sections.forEach(section => {
+ //get id from each section 
+ const secLink = "#" + section.getAttribute('id');
+    
+ //Create li  for each section in the list
 
-/**
- * End Helper Functions
- * Begin Main Functions
- * 
-*/
+ const newNavItem = document.createElement('li');
+    
+ //Create <a>  for each section in the list
+    
+ const newNavLink = document.createElement('a');
+ // put  a class name for each anchor
+ newNavLink.className = "menu__link"
+    
+ /*Extract the data attribute "data-nav value"  from each section and store it in sectionTitle variable */
+    
+ const sectionTitle = section.getAttribute('data-nav');
+ //set the innerText of each anchor to sectionTitle
+  newNavLink.innerText = sectionTitle;
+  console.log(sectionTitle);
+  //build this part href="#section1"
+  newNavLink.setAttribute('href', secLink);
+      
+  // Scroll to anchor ID using scrollTO even
 
-// build the nav
-//Query the all sections and store the list in variable
-const sect = document.querySelectorAll('section');
+  newNavLink.addEventListener("click", function(){
+  
+  section.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"});
+    })
 
-console.log(sect)
-//f get a NodeList to iterate through by using getElementsByTagName()
-var lis = document.getElementById("navbar__list").getElementsByTagName("li");
-console.log(lis)
+  newNavItem.appendChild(newNavLink);
 
-// Add class 'active' to section when near top of viewport
+  newFragment.appendChild(newNavItem);
 
+  });
 
-// Scroll to anchor ID using scrollTO event
-$(document).ready(function () {
-    var viewport = $(window),
-        setVisible = function (e) {
-            var viewportTop = viewport.scrollTop(),
-                viewportBottom = viewport.scrollTop() + viewport.height();
-            $('section').each(function () {
-                var self = $(this),
-                    top = self.offset().top,
-                    bottom = top + self.height(),
-                    topOnScreen = top >= viewportTop && top <= viewportBottom,
-                    bottomOnScreen = bottom >= viewportTop && bottom <= viewportBottom,
-                    elemVisible = topOnScreen || bottomOnScreen;
-                self.toggleClass('visible', elemVisible);
-            });
-        };
-    viewport.scroll(setVisible);
-    setVisible();
+ navbarMenu.appendChild(newFragment);
+
+ //*************2.get active section*************//
+
+ /*heighlight active section which is  into viewport or close to top
+ *Add class 'your-active-class' to that section */
+  
+ window.addEventListener('scroll', function(){
+     // itrate through sections 
+ sections.forEach((section)=>{
+
+ const topSection= section.getBoundingClientRect().top;
+
+    const bottomSection = section.getBoundingClientRect().bottom;
+ // test which section should be highlighted
+   
+    if (topSection >= 16 && bottomSection <= 990){
+ section.classList.remove('activeClass');
+        section.classList.add('activeClass');
+        section.style.backgroundColor= 'yellow';
+      //*************3.get active link*************//
+         // itrate through links
+        
+         let links = document.querySelectorAll('a');
+  //get the data-nav value for this active section.
+  let active_section_data = section.getAttribute('data-nav');
+  links.forEach( (link)=> { 
+      //check which link has the textContent equal to active section data-nav
+      if (active_section_data  == link.textContent) {
+                 link.classList.add('activeClass');
+           link.style.backgroundColor= 'yellow';
+           } else {
+        link.classList.remove('activeClass');
+             link.style.backgroundColor= 'green';
+    }
+    
+   } )
+        } else {
+        section.classList.remove('activeClass');
+             section.style.backgroundColor= 'green';
+    }
+    
+  });
+  
 });
-
-
-/**
- * End Main Functions
- * Begin Events
- * 
-*/
-
-// Build menu 
-
-// Scroll to section on link click
-
-// Set sections as active
+                    
+//const endingTime = performance.now();
+/*console.log('This code took ' + (endingTime - startingTime) + ' milliseconds.');*/
+                 
