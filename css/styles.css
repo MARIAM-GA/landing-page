@@ -18,6 +18,9 @@ body {
     color: #fff;
 }
 
+html{
+    scroll-behavior: smooth;
+}
 
 /* Typeography General*/
 h1 {
@@ -65,29 +68,46 @@ section {
 
 /* Navigation Styles*/
 .navbar__menu ul {
-    padding-left: 0;
     margin: 0;
-    text-align: right;
+    text-align: center;
+    padding: 5px;
 }
 
-
-
 .navbar__menu li {
-    display: inline-block;
+    display: inline-flex;
+    padding-right: 20px;
+}
+
+.bottom__link {
+    font-family: 'Oxygen', Sans-Serif;
+    position: fixed; /* Fixed/sticky position */
+    bottom: 2em;/* Place the button at the bottom of the page */
+    right: 3em;
+    z-index: 1;
+    text-align: right;
+    color: black;
+    text-decoration: none;
+    background: #cc1;
+    padding: 2%;
+    border-radius: 50%;/*round button*/
+    font-size: 18px;
+    border: none;
+    outline: none;
+    cursor: pointer;
 }
 
 .navbar__menu .menu__link {
-    display: block;
-    padding: 1em;
     font-weight: bold;
     text-decoration: none;
-    color: #000;
+    color: #000; 
+   display: block;
+   padding: 10px;
 }
 
-.navbar__menu .menu__link:hover {
-    background: #333;
-    color: #fff;
-    transition: ease 0.3s all;
+.navbar__menu .menu__link--active {
+    background:#cc1;
+    display: block;
+    padding: 10px;
 }
 
 /* Header Styles */
@@ -194,12 +214,26 @@ section:nth-of-type(3n + 1) .landing__container::after {
 
 /* ---- Theme State Rules ---- */
 /* Section Active Styles */
-/* Note: your-active-class class is applied through javascript. You should update the *class here and in the index.html to what you set in your javascript file.  */
-
-.activeClass{
-
+/* Note: your-active-class class is applied through javascript. You should update the class here and in the index.html to what you set in your javascript file.  */
+section.active-class {
+    background: rgb(245,246,250,0.3);
+    transition: all 0.5s ease-in;
 }
 
+section.active-class .landing__container::before {
+    opacity: 1;
+    animation: rotate 4s linear 0s infinite forwards;
+}
+
+section.active-class .landing__container::after {
+    opacity: 1;
+    animation: rotate 5s linear 0s infinite forwards reverse;
+}
+
+/*.link__active{
+    background: #444 ;
+    color: #fff;
+}*/
 
 /* Section Active Styles Keyframe Animations */
 @keyframes rotate {

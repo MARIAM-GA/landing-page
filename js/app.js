@@ -1,7 +1,6 @@
 /**
  *
  * Manipulating the DOM exercise.
- *===================================
  * Exercise programmatically builds navigation,
  * scrolls to anchors from navigation,
  * and highlights section in viewport upon scrolling.
@@ -10,99 +9,77 @@
  *
  * JS Version: ES2015/ES6
  *
- * JS Standard: ESlint*/
+ * JS Standard: ESlint
+ *
+*/
 
-/*to measure performance*/
-//const startingTime = performance.now();
-/*eslint-env es6*/
 
-//*************1.build the navbarMenu******************//
+// build the nav
+const navBarFunc = () => {
 
-const sections = document.querySelectorAll("section");
-//console.log(sections );
-const navbarMenu = document.getElementById("navbar__list");
-//console.log(navbarMenu);
-/*CreateDocumentFragment into which DOM nodes added to build an offscreen DOM tree.*/
-const newFragment = document.createDocumentFragment();
+    const navBar=document.getElementById('navbar__list');
+    const sections=document.querySelectorAll('section');
 
-//iterate  (i.e., loop)  through sections
+        sections.forEach(section => {
+            //Extract the data attribute "data-nav value" from each section and store it in navLinkName
+            const navLinkName = section.getAttribute("data-nav");
+            const sectionId = section.getAttribute("id");
 
-sections.forEach((section) => {
-  //get id from each section
-  const secLink = "#" + section.getAttribute("id");
+            const navLink = document.createElement('li');
+            //build this part  <li><a class="menu__link" href="#asectionId">navLinkName</a></li>
+            navLink.innerHTML = `<a class="menu__link" href="#${sectionId}">${navLinkName}</a>`;
+            navBar.classList.add("menu__link");
+            navBar.appendChild(navLink);
+        });
+};
+navBarFunc();
 
-  //Create li  for each section in the list
 
-  const newNavItem = document.createElement("li");
+function isInViewport(section) {
+    const rect = section.getBoundingClientRect();
+    //console.log(rect);
+    return (rect.top);
+}
 
-  //Create <a>  for each section in the list
+//give the active section a different appearance 
+function toggleActive() {
+    window.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('section');
 
-  const newNavLink = document.createElement("a");
-  // put  a class name for each anchor
-  newNavLink.className = "menu__link";
+        for (section of sections) {
+            const sectionOffset = isInViewport(section);
+            const checkActive = (sectionOffset, section) => {
+                const activeLink = document.querySelector(`a[href="#${section.getAttribute("id")}"]`);
 
-  /*Extract the data attribute "data-nav value"  from each section and store it in sectionTitle variable */
+                if (sectionOffset) {
+                    section.classList.add('active-class');
+                    activeLink.classList.add("menu__link--active");
+                }
 
-  const sectionTitle = section.getAttribute("data-nav");
-  //set the innerText of each anchor to sectionTitle
-  newNavLink.innerText = sectionTitle;
-  console.log(sectionTitle);
-  //build this part href="#section1"
-  newNavLink.setAttribute("href", secLink);
-
-  // Scroll to anchor ID using scrollTO even
-
-  newNavLink.addEventListener("click", function (event) {
-    event.preventDefault();
-    section.scrollIntoView({
-      behavior: "smooth",
-    });
-  });
-  newNavItem.appendChild(newNavLink); //append <a>  to <li>
-  newFragment.appendChild(newNavItem); //append <li>  to the Fragment
-});
-navbarMenu.appendChild(newFragment); //append the Fragment to <ul>
-
-//*************2.get active section*************//
-
-/*heighlight active section which is  into viewport or close to top
- *Add class 'your-active-class' to that section */
-
-window.addEventListener("scroll", function () {
-  // itrate through sections
-  sections.forEach((section) => {
-    const topSection = section.getBoundingClientRect().top;
-
-    const bottomSection = section.getBoundingClientRect().bottom;
-    // test which section should be highlighted
-    console.log(topSection);
-    console.log(bottomSection);
-    if (topSection < 150 && bottomSection >= -550) {
-      section.classList.remove("activeClass");
-      section.classList.add("activeClass");
-      section.style.backgroundColor = "yellow";
-      //*************3.get active link*************//
-      // itrate through links
-
-      let links = document.querySelectorAll("a");
-      //get the data-nav value for this active section.
-      let active_section_data = section.getAttribute("data-nav");
-      links.forEach((link) => {
-        //check which link has the textContent equal to active section data-nav
-        if (active_section_data == link.textContent) {
-          link.classList.add("activeClass");
-          link.style.backgroundColor = "yellow";
-        } else {
-          link.classList.remove("activeClass");
-          link.style.backgroundColor = "green";
+                else {
+                    section.classList.remove('active-class');
+                    activeLink.classList.remove("menu__link--active");
+                };
+            };
+            InViewport = () => sectionOffset < 250 && sectionOffset >= -250;
+            //call checkActive function
+            checkActive (InViewport(), section);
         }
-      });
-    } else {
-      section.classList.remove("activeClass");
-      section.style.backgroundColor = "green";
-    }
-  });
-});
+    });
+}
+toggleActive();
 
-//const endingTime = performance.now();
-/*console.log('This code took ' + (endingTime - startingTime) + ' milliseconds.');*/
+//Get the button
+var mybutton = document.getElementById("myBtn");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
